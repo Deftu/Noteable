@@ -3,17 +3,13 @@
     "id": "${mod_id}",
     "version": "${mod_version}",
     "name": "${mod_name}",
-    "description": "I'm a template mod!",
+    "description": "A Minecraft mod adding the capability of creating (sticky) notes inside the game.",
     "authors": [
-        "Template Guy"
-    ],
-    "contributors": [
-        "Template Contributor"
+        "Deftu"
     ],
     "contact": {
-        "homepage": "...",
-        "issues": "...",
-        "sources": "..."
+        "issues": "https://github.com/Deftu/${mod_name}",
+        "sources": "https://github.com/Deftu/${mod_name}/issues"
     },
     "license": "LGPL 3.0",
     "environment": "*",
@@ -21,19 +17,15 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.template.client.TemplateModClient"
+                "value": "xyz.deftu.noteable.Noteable"
             }
         ],
-        "main": [
+        "modmenu": [
             {
-                "adapter": "kotlin",
-                "value": "xyz.deftu.template.TemplateMod"
+                "value": "xyz.deftu.noteable.utils.ModMenuIntegration"
             }
         ]
     },
-    "mixins": [
-        "${mod_id}.mixins.json"
-    ],
     "depends": {
         "fabric-api": "*",
         "fabricloader": ">=0.14.9",

@@ -22,21 +22,47 @@ repositories {
     mavenCentral()
 }
 
+fun Dependency?.excludeVitals(): Dependency = apply {
+    check(this is ExternalModuleDependency)
+    exclude(module = "kotlin-stdlib")
+    exclude(module = "kotlin-stdlib-common")
+    exclude(module = "kotlin-stdlib-jdk8")
+    exclude(module = "kotlin-stdlib-jdk7")
+    exclude(module = "kotlin-reflect")
+    exclude(module = "annotations")
+    exclude(module = "fabric-loader")
+}!!
+
 dependencies {
     implementation(kotlin("stdlib"))
 
     modImplementation("net.fabricmc.fabric-api:fabric-api:${when (mcData.version) {
-        11902 -> "0.57.0+1.19"
-        11802 -> "0.57.0+1.18.2"
+        11902 -> "0.60.0+1.19.2"
+        11802 -> "0.58.0+1.18.2"
         else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
     }}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.8.2+kotlin.1.7.10")
 
     modImplementation("com.terraformersmc:modmenu:${when (mcData.version) {
-        11902 -> "4.0.4"
+        11902 -> "4.0.6"
         11802 -> "3.2.3"
         else -> throw IllegalStateException("Invalid MC version: ${mcData.version}")
     }}")
+
+    include(modImplementation(libs.versions.universalcraft.map {
+        "gg.essential:universalcraft-${when (mcData.version) {
+            11902 -> "1.19-fabric"
+            11802 -> "1.18.1-fabric"
+            else -> "${mcData.versionStr}-${mcData.loader.name}"
+        }}:$it"
+    }.get()).excludeVitals())
+    include(modImplementation(libs.versions.elementa.map {
+        "gg.essential:elementa-${when (mcData.version) {
+            11902 -> "1.18.1-fabric"
+            11802 -> "1.18.1-fabric"
+            else -> "${mcData.versionStr}-${mcData.loader.name}"
+        }}:$it"
+    }.get()).excludeVitals())
 }
 
 tasks {
