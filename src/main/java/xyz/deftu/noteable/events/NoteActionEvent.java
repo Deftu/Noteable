@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import xyz.deftu.noteable.notes.Note;
 
+@FunctionalInterface
 public interface NoteActionEvent {
     Event<NoteActionEvent> EVENT = EventFactory.createArrayBacked(NoteActionEvent.class, (listeners) -> (action, note) -> {
         for (NoteActionEvent listener : listeners) {

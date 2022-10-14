@@ -1,4 +1,4 @@
-package xyz.deftu.noteable.ui.components
+package xyz.deftu.noteable.gui.components
 
 import gg.essential.elementa.components.UIBlock
 import gg.essential.elementa.components.UIContainer
@@ -9,7 +9,7 @@ import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
 import gg.essential.elementa.state.BasicState
 import gg.essential.elementa.utils.withAlpha
-import xyz.deftu.noteable.ui.NoteablePalette
+import xyz.deftu.noteable.gui.NoteablePalette
 import java.awt.Color
 
 class ButtonComponent(
@@ -30,7 +30,7 @@ class ButtonComponent(
     init {
         outline.color = Color.BLACK.withAlpha(0)
         hoverState.onSetValue { state ->
-            outline::color.animate(Animations.OUT_EXP, 0.75f,
+            outline::color.animate(Animations.OUT_EXP, 0.5f,
                 if (state) NoteablePalette.primary else Color.BLACK.withAlpha(0))
         }
 

@@ -2,7 +2,7 @@ package xyz.deftu.noteable
 
 import net.fabricmc.api.ClientModInitializer
 import xyz.deftu.noteable.notes.NoteManager
-import xyz.deftu.noteable.ui.HudRenderer
+import xyz.deftu.noteable.gui.HudRenderer
 
 object Noteable : ClientModInitializer {
     const val NOTES_CONFIG = "notes.json"

@@ -1,4 +1,4 @@
-package xyz.deftu.noteable.ui.components
+package xyz.deftu.noteable.gui.components
 
 import gg.essential.elementa.components.UIBlock
 import gg.essential.elementa.components.UIContainer
@@ -7,7 +7,7 @@ import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import xyz.deftu.noteable.notes.Note
-import xyz.deftu.noteable.ui.NoteablePalette
+import xyz.deftu.noteable.gui.NoteablePalette
 
 class NoteComponent(
     val note: Note
