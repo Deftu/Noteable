@@ -6,28 +6,28 @@ import gg.essential.elementa.state.BasicState
 import gg.essential.elementa.state.State
 import xyz.deftu.noteable.gui.components.NoteComponent
 
-class NoteDragHandler(
+class NoteMoveHandler(
     component: NoteComponent
 ) {
-    private lateinit var editState: State<Boolean>
+    private lateinit var moveState: State<Boolean>
     private val dragState = BasicState(false)
     private var draggingOffset = 0f to 0f
 
     init {
         component.onMouseClick {
-            if (!editState.get())
+            if (!moveState.get())
                 return@onMouseClick
 
             draggingOffset = it.relativeX to it.relativeY
             dragState.set(true)
         }.onMouseRelease {
-            if (!editState.get())
+            if (!moveState.get())
                 return@onMouseRelease
 
             draggingOffset = 0f to 0f
             dragState.set(false)
         }.onMouseDrag { mouseX, mouseY, mouseButton ->
-            if (mouseButton != 0 || !editState.get()|| !dragState.get())
+            if (mouseButton != 0 || !moveState.get()|| !dragState.get())
                 return@onMouseDrag
 
             val note = component.note
@@ -41,7 +41,7 @@ class NoteDragHandler(
         }
     }
 
-    fun setEditState(state: State<Boolean>) {
-        editState = state
+    fun setMoveState(state: State<Boolean>) {
+        moveState = state
     }
 }

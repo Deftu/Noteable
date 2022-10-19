@@ -13,10 +13,17 @@ abstract class ModalComponent : UIContainer() {
     }
 
     open fun postInitialize() {}
+    open fun postClose() {}
 
     override fun afterInitialization() {
         setFloating(true)
         postInitialize()
         super.afterInitialization()
+    }
+
+    fun close() {
+        setFloating(false)
+        hide(true)
+        postClose()
     }
 }

@@ -1,6 +1,7 @@
 package xyz.deftu.noteable.gui.menu
 
 import gg.essential.elementa.UIComponent
+import gg.essential.elementa.dsl.*
 import gg.essential.elementa.state.State
 import xyz.deftu.noteable.gui.components.NoteComponent
 
@@ -21,7 +22,17 @@ class NotePinHandler {
     }
 
     private fun configurePinComponent() {
-        if (component.note.sticky) pinComponent.unhide(true) else pinComponent.hide(true)
+        if (component.note.sticky) {
+            component.title.constrain {
+                width = 100.percent - 25.pixels
+            }
+            pinComponent.unhide(true)
+        } else {
+            pinComponent.hide(true)
+            component.title.constrain {
+                width = 100.percent - 15.pixels
+            }
+        }
     }
 
     fun setPinState(state: State<Boolean>) {

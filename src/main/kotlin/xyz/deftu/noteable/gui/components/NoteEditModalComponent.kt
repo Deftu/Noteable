@@ -1,10 +1,7 @@
 package xyz.deftu.noteable.gui.components
 
 import gg.essential.elementa.components.UIBlock
-import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.UIText
-import gg.essential.elementa.components.input.UIMultilineTextInput
-import gg.essential.elementa.components.input.UITextInput
 import gg.essential.elementa.constraints.CenterConstraint
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint
@@ -15,9 +12,11 @@ import xyz.deftu.noteable.gui.components.inputs.NoteContentInput
 import xyz.deftu.noteable.gui.components.inputs.NoteTitleInput
 import xyz.deftu.noteable.notes.Note
 import xyz.deftu.noteable.notes.NoteManager
-import java.util.UUID
+import java.util.*
 
-class NoteCreateModalComponent : ModalComponent() {
+class NoteEditModalComponent(
+    note: Note
+) : ModalComponent() {
     private lateinit var reloader: () -> Unit
 
     init {
@@ -36,7 +35,7 @@ class NoteCreateModalComponent : ModalComponent() {
             width = 1f
         ) childOf this
 
-        val title by UIText("Create new note").constrain {
+        val title by UIText("Edit note").constrain {
             x = 7.5.pixels
             y = 7.5.pixels
             textScale = 1.9.pixels
@@ -54,12 +53,14 @@ class NoteCreateModalComponent : ModalComponent() {
             width = 100.percent - 7.5.pixels
             height = ChildBasedSizeConstraint(2.5f)
         } childOf background
+        titleInput.setText(note.title)
         val contentInput by NoteContentInput().constrain {
             x = 7.5.pixels
             y = SiblingConstraint(7.5f)
             width = 100.percent - 7.5.pixels
             height = ChildBasedSizeConstraint(2.5f)
         } childOf background
+        contentInput.setText(note.content)
 
         val finishButton by ButtonComponent("Finish").constrain {
             x = CenterConstraint()
@@ -72,13 +73,14 @@ class NoteCreateModalComponent : ModalComponent() {
             if (title.isBlank() || content.isBlank())
                 return@onMouseClick
 
+            NoteManager.removeNote(note)
             NoteManager.addNote(Note(
-                uuid = UUID.randomUUID(),
+                uuid = note.uuid,
                 title = title,
                 content = content,
-                sticky = false,
-                x = 50,
-                y = 50
+                sticky = note.sticky,
+                x = note.x,
+                y = note.y
             ))
             close()
         } childOf background
