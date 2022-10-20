@@ -4,6 +4,12 @@
 # [`Noteable`]
 A Minecraft mod adding the capability of
 creating (sticky) notes inside the game.
+  
+[![Ko-Fi Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/donate/kofi-singular_64h.png)](https://shr.deftu.xyz/ko-fi)  
+[![CurseForge Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/available/curseforge_64h.png)](https://www.curseforge.com/minecraft/mc-mods/noteable)
+[![Modrinth Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/available/modrinth_64h.png)](https://shr.deftu.xyz/mods/noteable)  
+[![Discord Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/social/discord-singular_64h.png)](https://shr.deftu.xyz/discord)
+[![GitHub Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/social/github-singular_64h.png)](https://github.com/Deftu/Noteable)
 
 </center>
 </div>
