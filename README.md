@@ -12,11 +12,11 @@ creating (sticky) notes inside the game.
 It's cool! And it's very helpful for managing big projects
 in your survival worlds, or in servers with friends!
 
-# Do my notes save?
+## Do my notes save?
 Yes! They save and will be restored when you restart your
 game.
 
-# How do I set it up/how do I add/edit/delete/move/pin notes?
+## How do I set it up/how do I add/edit/delete/move/pin notes?
 This **requires** [Mod Menu][modmenu]. The config screen can
 be access by clicking on Noteable's entry in the mod menu
 screen.
