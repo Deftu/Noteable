@@ -4,6 +4,7 @@
     "version": "${mod_version}",
     "name": "${mod_name}",
     "description": "A Minecraft mod adding the capability of creating (sticky) notes inside the game.",
+    "icon": "assets/noteable/logo.png",
     "authors": [
         "Deftu"
     ],
