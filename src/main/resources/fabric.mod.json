@@ -4,7 +4,7 @@
     "version": "${mod_version}",
     "name": "${mod_name}",
     "description": "A Minecraft mod adding the capability of creating (sticky) notes inside the game.",
-    "icon": "assets/noteable/logo.png",
+    "icon": "assets/noteablei/logo.png",
     "authors": [
         "Deftu"
     ],
@@ -31,7 +31,8 @@
         "fabric-api": "*",
         "fabricloader": ">=0.14.9",
         "fabric-language-kotlin": "*",
-        "minecraft": "~${mc_version}",
+        "deftulib": ">=1.0.0",
+        "minecraft": "~${minor_mc_version}",
         "java": ">=16"
     }
 }

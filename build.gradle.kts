@@ -1,5 +1,5 @@
 plugins {
-    id("xyz.unifycraft.gradle.multiversion-root")
+    id("xyz.enhancedpixel.gradle.multiversion-root")
 }
 
 preprocess {

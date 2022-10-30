@@ -1,10 +1,7 @@
 package xyz.deftu.noteable.gui.components
 
 import gg.essential.elementa.components.UIBlock
-import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.UIText
-import gg.essential.elementa.components.input.UIMultilineTextInput
-import gg.essential.elementa.components.input.UITextInput
 import gg.essential.elementa.constraints.CenterConstraint
 import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint

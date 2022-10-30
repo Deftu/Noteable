@@ -4,13 +4,9 @@ import gg.essential.elementa.components.UIBlock
 import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.UIText
 import gg.essential.elementa.constraints.CenterConstraint
-import gg.essential.elementa.constraints.animation.Animations
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
-import gg.essential.elementa.state.BasicState
-import gg.essential.elementa.utils.withAlpha
 import xyz.deftu.noteable.gui.NoteablePalette
-import java.awt.Color
 
 class ButtonComponent(
     text: String

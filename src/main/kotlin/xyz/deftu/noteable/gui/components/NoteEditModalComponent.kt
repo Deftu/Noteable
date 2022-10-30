@@ -12,7 +12,6 @@ import xyz.deftu.noteable.gui.components.inputs.NoteContentInput
 import xyz.deftu.noteable.gui.components.inputs.NoteTitleInput
 import xyz.deftu.noteable.notes.Note
 import xyz.deftu.noteable.notes.NoteManager
-import java.util.*
 
 class NoteEditModalComponent(
     note: Note
