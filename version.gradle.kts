@@ -43,6 +43,8 @@ dependencies {
 }
 
 releases {
+    changelogFile.set(file("CHANGELOG.md"))
+
     modrinth {
         projectId.set("8CZovXCd")
         dependencies.set(listOf(
