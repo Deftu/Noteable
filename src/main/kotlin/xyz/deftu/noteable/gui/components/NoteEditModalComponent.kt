@@ -7,6 +7,8 @@ import gg.essential.elementa.constraints.ChildBasedSizeConstraint
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
+import net.minecraft.client.resource.language.I18n
+import xyz.deftu.noteable.Noteable
 import xyz.deftu.noteable.gui.NoteablePalette
 import xyz.deftu.noteable.gui.components.inputs.NoteContentInput
 import xyz.deftu.noteable.gui.components.inputs.NoteTitleInput
@@ -34,7 +36,7 @@ class NoteEditModalComponent(
             width = 1f
         ) childOf this
 
-        val title by UIText("Edit note").constrain {
+        val title by UIText(I18n.translate("gui.${Noteable.ID}.text.modal.edit")).constrain {
             x = 7.5.pixels
             y = 7.5.pixels
             textScale = 1.9.pixels
@@ -61,7 +63,7 @@ class NoteEditModalComponent(
         } childOf background
         contentInput.setText(note.content)
 
-        val finishButton by ButtonComponent("Finish").constrain {
+        val finishButton by ButtonComponent(I18n.translate("gui.done")).constrain {
             x = CenterConstraint()
             y = SiblingConstraint(7.5f)
             width = 75.pixels

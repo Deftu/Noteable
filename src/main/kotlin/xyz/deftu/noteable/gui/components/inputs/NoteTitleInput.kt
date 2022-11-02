@@ -7,10 +7,12 @@ import gg.essential.elementa.components.input.UITextInput
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
+import net.minecraft.client.resource.language.I18n
+import xyz.deftu.noteable.Noteable
 import xyz.deftu.noteable.gui.NoteablePalette
 
 class NoteTitleInput : UIContainer() {
-    private val titleInputText by UIText("Title:").constrain {
+    private val titleInputText by UIText(I18n.translate("gui.${Noteable.ID}.text.modal.input.title.header")).constrain {
         textScale = 1.6.pixels
     } childOf this
     private val titleInputBox by UIBlock(NoteablePalette.background).constrain {
@@ -22,7 +24,7 @@ class NoteTitleInput : UIContainer() {
         width = 1f
     ) childOf this
     private val titleInput by UITextInput(
-        placeholder = "Title...",
+        placeholder = I18n.translate("gui.${Noteable.ID}.text.modal.input.title.input"),
         selectionForegroundColor = NoteablePalette.primary
     ).constrain {
         x = 2.5.pixels

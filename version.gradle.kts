@@ -1,5 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import xyz.enhancedpixel.gradle.utils.GameSide
+import xyz.enhancedpixel.gradle.tools.CurseRelation
+import xyz.enhancedpixel.gradle.tools.CurseRelationType
+import com.modrinth.minotaur.dependencies.DependencyType
+import com.modrinth.minotaur.dependencies.ModDependency
 
 plugins {
     java
@@ -8,6 +12,8 @@ plugins {
     id("xyz.enhancedpixel.gradle.multiversion")
     id("xyz.enhancedpixel.gradle.tools")
     id("xyz.enhancedpixel.gradle.tools.loom")
+    id("xyz.enhancedpixel.gradle.tools.blossom")
+    id("xyz.enhancedpixel.gradle.tools.releases")
 }
 
 loomHelper {
@@ -33,7 +39,29 @@ fun Dependency?.excludeVitals(): Dependency = apply {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    modImplementation("xyz.deftu:DeftuLib-${mcData.versionStr}:1.0.0")
+    modImplementation(include("xyz.deftu:DeftuLib-${mcData.versionStr}:1.2.0")!!)
+}
+
+releases {
+    modrinth {
+        projectId.set("8CZovXCd")
+        dependencies.set(listOf(
+            ModDependency("P7dR8mSH", DependencyType.REQUIRED),
+            ModDependency("Ha28R6CL", DependencyType.REQUIRED),
+            ModDependency("mOgUt4GM", DependencyType.REQUIRED),
+            ModDependency("WfhjX9sQ", DependencyType.REQUIRED)
+        ))
+    }
+
+    curseforge {
+        projectId.set("690080")
+        relations.set(listOf(
+            CurseRelation("fabric-api", CurseRelationType.REQUIRED),
+            CurseRelation("fabric-language-kotlin", CurseRelationType.REQUIRED),
+            CurseRelation("modmenu", CurseRelationType.REQUIRED),
+            CurseRelation("deftulib", CurseRelationType.REQUIRED)
+        ))
+    }
 }
 
 tasks {

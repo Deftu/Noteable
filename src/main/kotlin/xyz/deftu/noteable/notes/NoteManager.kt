@@ -19,14 +19,27 @@ object NoteManager {
     private lateinit var file: File
 
     fun initialize() {
-        file = File(File(MinecraftClient.getInstance().runDirectory, "config"), Noteable.NOTES_CONFIG)
+        file = File(Noteable.getConfigDirectory(), Noteable.NOTES_CONFIG)
         if (!file.exists()) {
             file.createNewFile()
             file.writeText(gson.toJson(JsonArray()))
         }
 
+        // Migrate old note configs so that it can be stored in the new directory
+        migrateOld()
+
         ClientLifecycleEvents.CLIENT_STARTED.register {
             load()
+        }
+    }
+
+    private fun migrateOld() {
+        val oldFile = File(File(MinecraftClient.getInstance().runDirectory, "config"), "notes.json")
+        if (oldFile.exists()) {
+            val oldNotes = gson.fromJson(oldFile.readText(), Array<Note>::class.java)
+            notes.addAll(oldNotes)
+            save()
+            oldFile.delete()
         }
     }
 

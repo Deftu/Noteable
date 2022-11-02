@@ -7,10 +7,12 @@ import gg.essential.elementa.components.input.UIMultilineTextInput
 import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
+import net.minecraft.client.resource.language.I18n
+import xyz.deftu.noteable.Noteable
 import xyz.deftu.noteable.gui.NoteablePalette
 
 class NoteContentInput : UIContainer() {
-    private val contentInputText by UIText("Content:").constrain {
+    private val contentInputText by UIText(I18n.translate("gui.${Noteable.ID}.text.modal.input.content.header")).constrain {
         textScale = 1.6.pixels
     } childOf this
     private val contentInputBox by UIBlock(NoteablePalette.background).constrain {
@@ -22,7 +24,7 @@ class NoteContentInput : UIContainer() {
         width = 1f
     ) childOf this
     private val contentInput by UIMultilineTextInput(
-        placeholder = "Content...",
+        placeholder = I18n.translate("gui.${Noteable.ID}.text.modal.input.content.input"),
         selectionForegroundColor = NoteablePalette.primary
     ).constrain {
         x = 2.5.pixels
