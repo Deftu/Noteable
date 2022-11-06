@@ -43,7 +43,8 @@ dependencies {
 }
 
 releases {
-    changelogFile.set(rootProject.file("CHANGELOG.md"))
+    val changelog = rootProject.file("changelogs/${project.version}.md")
+    if (changelog.exists()) changelogFile.set(changelog)
 
     modrinth {
         projectId.set("8CZovXCd")
