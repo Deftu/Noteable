@@ -115,7 +115,7 @@ class NoteEditorMenu : WindowScreen(
         height = 25.pixels
     } childOf window
 
-    private val enabledButton by ButtonComponent(I18n.translate("gui.${Noteable.ID}.text.config.enabled"), enabledState).constrain {
+    private val enabledButton by ButtonComponent(I18n.translate("gui.${Noteable.ID}.buttons.config.enabled"), enabledState).constrain {
         width = 100.pixels
         height = 25.pixels
     }.onMouseClick {
@@ -124,7 +124,7 @@ class NoteEditorMenu : WindowScreen(
         Config.INSTANCE.save()
     } childOf configButtonContainer
 
-    private val updateCheckingButton by ButtonComponent(I18n.translate("gui.${Noteable.ID}.text.config.update_checking"), updateCheckingState).constrain {
+    private val updateCheckingButton by ButtonComponent(I18n.translate("gui.${Noteable.ID}.buttons.config.update_checking"), updateCheckingState).constrain {
         x = SiblingConstraint(7.5f)
         width = 100.pixels
         height = 25.pixels

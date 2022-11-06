@@ -1,7 +1,3 @@
-# Noteable 1.2.0
+# Noteable 1.2.1
 
-- Added keybinding to open note editor menu
-- Added DeftuLib 1.2.0
-- Added toggle for DeftuLib update checking
-- Added overall mod toggle
-- Added localization
+- Added precise movements to draggable HUD (use your keyboard's arrow keys)
