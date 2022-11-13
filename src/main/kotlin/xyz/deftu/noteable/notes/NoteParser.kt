@@ -22,8 +22,8 @@ object NoteParser {
             var noteTitle = ""
             var noteContent = ""
             var noteSticky = false
-            var noteX = 0
-            var noteY = 0
+            var noteX = 0f
+            var noteY = 0f
 
             reader.beginObject()
 
@@ -59,12 +59,12 @@ object NoteParser {
                     "x" -> {
                         if (token != JsonToken.NUMBER)
                             throw InvalidConfigException("Note x position should be an integer!")
-                        noteX = reader.nextInt()
+                        noteX = reader.nextDouble().toFloat()
                     }
                     "y" -> {
                         if (token != JsonToken.NUMBER)
                             throw InvalidConfigException("Note y position should be an integer!")
-                        noteY = reader.nextInt()
+                        noteY = reader.nextDouble().toFloat()
                     }
                 }
             }

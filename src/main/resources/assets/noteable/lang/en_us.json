@@ -1,25 +1,18 @@
 {
-    "key.categories.noteable": "Noteable",
-    "key.noteable.open_editor": "Open Editor",
+    "noteable.key.open_editor": "Open Editor",
 
-    "gui.noteable.buttons.notes.add": "Add",
-    "gui.noteable.buttons.notes.delete": "Delete",
-    "gui.noteable.buttons.notes.move": "Move",
-    "gui.noteable.buttons.notes.edit": "Edit",
-    "gui.noteable.buttons.notes.pin": "Pin",
+    "noteable.menu.add": "Add",
+    "noteable.menu.edit": "Edit",
+    "noteable.menu.pin": "Pin",
 
-    "gui.noteable.text.notes.delete": "Delete Mode Activated",
-    "gui.noteable.text.notes.move": "Move Mode Activated",
-    "gui.noteable.text.notes.edit": "Edit Mode Activated",
-    "gui.noteable.text.notes.pin": "Pin Mode Activated",
+    "noteable.menu.text.modal.create": "Create new note",
+    "noteable.menu.text.modal.edit": "Edit note",
+    "noteable.menu.input.title.header": "Title:",
+    "noteable.menu.input.title.input": "Title...",
+    "noteable.menu.input.content.header": "Content:",
+    "noteable.menu.input.content.input": "Content...",
 
-    "gui.noteable.text.modal.create": "Create new note",
-    "gui.noteable.text.modal.edit": "Edit note",
-    "gui.noteable.text.modal.input.title.header": "Title:",
-    "gui.noteable.text.modal.input.title.input": "Title...",
-    "gui.noteable.text.modal.input.content.header": "Content:",
-    "gui.noteable.text.modal.input.content.input": "Content...",
-
-    "gui.noteable.buttons.config.enabled": "Enabled",
-    "gui.noteable.buttons.config.update_checking": "Update Checking"
+    "noteable.config.enabled": "Enabled",
+    "noteable.config.update_checking": "Update Checking",
+    "noteable.config.edit": "Edit"
 }

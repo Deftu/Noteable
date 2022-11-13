@@ -5,11 +5,11 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.KeyBinding
 import org.lwjgl.glfw.GLFW
+import xyz.deftu.lib.client.hud.DraggableHudWindow
 import xyz.deftu.lib.events.InputEvent
+import xyz.deftu.noteable.events.NoteActionEvent
+import xyz.deftu.noteable.gui.NoteEditorMenu
 import xyz.deftu.noteable.notes.NoteManager
-import xyz.deftu.noteable.gui.HudRenderer
-import xyz.deftu.noteable.gui.menu.NoteEditorMenu
-import java.io.File
 
 object Noteable : ClientModInitializer {
     const val NAME = "@MOD_NAME@"
@@ -18,29 +18,25 @@ object Noteable : ClientModInitializer {
 
     const val NOTES_CONFIG = "notes.json"
 
+    val hudWindow = DraggableHudWindow()
+
     override fun onInitializeClient() {
-        HudRenderer.initialize()
+        NoteableConfig.load()
+        hudWindow.initialize()
         NoteManager.initialize()
 
-        val keyBinding = KeyBinding("key.$ID.open_editor", GLFW.GLFW_KEY_N, "key.categories.noteable")
+        NoteActionEvent.EVENT.register { action, note ->
+            println("NoteActionEvent: $action $note - refresh")
+            NoteEditorMenu.instance?.refresh()
+        }
+
+        val keyBinding = KeyBinding("$ID.key.open_editor", GLFW.GLFW_KEY_N, NAME)
         KeyBindingHelper.registerKeyBinding(keyBinding)
         InputEvent.EVENT.register { button, action, _, type ->
             if (action != GLFW.GLFW_RELEASE || MinecraftClient.getInstance().currentScreen != null || !keyBinding.matchesKey(button, 0))
                 return@register
 
-            MinecraftClient.getInstance().setScreen(NoteEditorMenu())
+            MinecraftClient.getInstance().setScreen(NoteableConfig.createMenu())
         }
-    }
-
-    fun getConfigDirectory(): File {
-        val dir = File("config")
-        if (!dir.exists() && !dir.mkdirs())
-            throw IllegalStateException("Could not create config directory!")
-
-        val noteableDir = File(dir, ID)
-        if (!noteableDir.exists() && !noteableDir.mkdirs())
-            throw IllegalStateException("Could not create Noteable config directory!")
-
-        return noteableDir
     }
 }

@@ -1,5 +1,6 @@
 package xyz.deftu.noteable.notes
 
+import xyz.deftu.noteable.gui.NoteComponent
 import java.util.UUID
 
 data class Note(
@@ -7,6 +8,8 @@ data class Note(
     val title: String,
     val content: String,
     var sticky: Boolean,
-    var x: Int,
-    var y: Int
-)
+    var x: Float,
+    var y: Float
+) {
+    internal var component: NoteComponent? = null
+}

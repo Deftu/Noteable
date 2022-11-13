@@ -23,6 +23,7 @@ loomHelper {
 repositories {
     maven("https://maven.terraformersmc.com/")
     maven("https://maven.deftu.xyz/releases")
+    maven("https://maven.isxander.dev/releases")
     mavenCentral()
 }
 
@@ -39,7 +40,7 @@ fun Dependency?.excludeVitals(): Dependency = apply {
 
 dependencies {
     implementation(kotlin("stdlib"))
-    modImplementation(include("xyz.deftu:DeftuLib-${mcData.versionStr}:1.2.0")!!)
+    modImplementation("xyz.deftu:DeftuLib-${mcData.versionStr}:1.3.5")
 }
 
 releases {

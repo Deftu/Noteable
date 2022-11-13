@@ -1,4 +1,4 @@
-package xyz.deftu.noteable.gui.components
+package xyz.deftu.noteable.gui
 
 import gg.essential.elementa.components.UIBlock
 import gg.essential.elementa.components.UIText
@@ -8,42 +8,43 @@ import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
 import net.minecraft.client.resource.language.I18n
+import xyz.deftu.lib.client.gui.DeftuPalette
 import xyz.deftu.noteable.Noteable
-import xyz.deftu.noteable.gui.NoteablePalette
-import xyz.deftu.noteable.gui.components.inputs.NoteContentInput
-import xyz.deftu.noteable.gui.components.inputs.NoteTitleInput
+//import xyz.deftu.noteable.gui.components.ButtonComponent
+import xyz.deftu.noteable.gui.inputs.NoteContentInput
+import xyz.deftu.noteable.gui.inputs.NoteTitleInput
 import xyz.deftu.noteable.notes.Note
 import xyz.deftu.noteable.notes.NoteManager
 
 class NoteEditModalComponent(
     note: Note
 ) : ModalComponent() {
-    private lateinit var reloader: () -> Unit
-
     init {
         constrain {
             width = 275.pixels
             height = 190.pixels
         }
 
-        val background by UIBlock(NoteablePalette.background).constrain {
+        val background by UIBlock(DeftuPalette.getBackground()).constrain {
             x = CenterConstraint()
             y = CenterConstraint()
             width = 100.percent
             height = 100.percent
         } effect OutlineEffect(
-            color = NoteablePalette.primary,
+            color = DeftuPalette.getPrimary(),
             width = 1f
         ) childOf this
 
-        val title by UIText(I18n.translate("gui.${Noteable.ID}.text.modal.edit")).constrain {
+        val title by UIText(I18n.translate("${Noteable.ID}.menu.text.modal.edit")).constrain {
             x = 7.5.pixels
             y = 7.5.pixels
             textScale = 1.9.pixels
+            color = DeftuPalette.getText().toConstraint()
         } childOf background
         val closeButton by UIText("X").constrain {
             x = 7.5.pixels(true)
             y = 7.5.pixels
+            color = DeftuPalette.getText().toConstraint()
         }.onMouseClick {
             close()
         } childOf background
@@ -85,13 +86,5 @@ class NoteEditModalComponent(
             ))
             close()
         } childOf background
-    }
-
-    override fun postClose() {
-        reloader()
-    }
-
-    fun setReloader(block: () -> Unit) {
-        this.reloader = block
     }
 }

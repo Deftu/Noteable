@@ -1,4 +1,4 @@
-package xyz.deftu.noteable.gui.components
+package xyz.deftu.noteable.gui
 
 import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.constraints.CenterConstraint
