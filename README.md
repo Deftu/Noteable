@@ -14,6 +14,8 @@ creating (sticky) notes inside the game.
 </center>
 </div>
 
+[![BisectHosting](https://www.bisecthosting.com/partners/custom-banners/8fb6621b-811a-473b-9087-c8c42b50e74c.png)](https://bisecthosting.com/deftu)
+
 ## But... Why?
 It's cool! And it's very helpful for managing big projects
 in your survival worlds, or in servers with friends!
