@@ -18,18 +18,12 @@
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "xyz.deftu.noteable.Noteable"
+                "value": "dev.deftu.noteable.NoteableEntrypoint"
             }
         ],
         "modmenu": [
             {
-                "value": "xyz.deftu.noteable.utils.ModMenuIntegration"
-            }
-        ],
-        "update_checker": [
-            {
-                "adapter": "kotlin",
-                "value": "xyz.deftu.noteable.utils.NoteableUpdater"
+                "value": "dev.deftu.noteable.client.ModMenuIntegration"
             }
         ]
     },
@@ -37,8 +31,8 @@
         "fabric-api": "*",
         "fabricloader": ">=0.14.9",
         "fabric-language-kotlin": "*",
-        "deftulib": ">=1.0.0",
         "minecraft": "~${minor_mc_version}",
-        "java": ">=16"
+        "textile": ">=0.11.1",
+        "omnicore": ">=0.23.0"
     }
 }

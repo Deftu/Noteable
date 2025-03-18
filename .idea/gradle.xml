@@ -4,16 +4,38 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="delegatedBuild" value="true" />
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/versions/1.12.2-forge" />
+            <option value="$PROJECT_DIR$/versions/1.16.5-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.16.5-forge" />
+            <option value="$PROJECT_DIR$/versions/1.17.1-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.17.1-forge" />
             <option value="$PROJECT_DIR$/versions/1.18.2-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.18.2-forge" />
             <option value="$PROJECT_DIR$/versions/1.19.2-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.19.2-forge" />
+            <option value="$PROJECT_DIR$/versions/1.19.4-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.19.4-forge" />
+            <option value="$PROJECT_DIR$/versions/1.20.1-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.20.1-forge" />
+            <option value="$PROJECT_DIR$/versions/1.20.4-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.20.4-forge" />
+            <option value="$PROJECT_DIR$/versions/1.20.4-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.20.6-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.20.6-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.21.1-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.21.1-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.21.2-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.21.2-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.21.3-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.21.3-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.21.4-fabric" />
+            <option value="$PROJECT_DIR$/versions/1.21.4-neoforge" />
+            <option value="$PROJECT_DIR$/versions/1.8.9-forge" />
           </set>
         </option>
       </GradleProjectSettings>
