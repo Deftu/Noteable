@@ -4,6 +4,8 @@ import dev.deftu.gradle.utils.includeOrShade
 import dev.deftu.gradle.utils.version.MinecraftVersions
 import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
+import dev.deftu.gradle.tools.minecraft.CurseRelation
+import dev.deftu.gradle.tools.minecraft.CurseRelationType
 
 plugins {
     java
@@ -20,6 +22,10 @@ plugins {
 
 toolkitLoomHelper {
     disableRunConfigs(GameSide.SERVER)
+}
+
+toolkitMultiversion {
+    moveBuildsToRootProject.set(true)
 }
 
 dependencies {
@@ -60,5 +66,37 @@ toolkitReleases {
     val changelog = rootProject.file("changelogs/${project.version}.md")
     if (changelog.exists()) {
         changelogFile.set(changelog)
+    }
+
+    modrinth {
+        projectId.set("8CZovXCd")
+        dependencies.add(ModDependency("textile-lib", DependencyType.REQUIRED))
+        dependencies.add(ModDependency("omnicore", DependencyType.REQUIRED))
+
+        if (mcData.version >= MinecraftVersions.VERSION_1_16_5) {
+            val kotlinWrapperId = if (mcData.isForgeLike) "kotlin-for-forge" else "fabric-language-kotlin"
+            dependencies.add(ModDependency(kotlinWrapperId, DependencyType.REQUIRED))
+        }
+
+        if (mcData.isFabric) {
+            val fapiId = if (mcData.isLegacyFabric) "legacy-fabric-api" else "fabric-api"
+            dependencies.add(ModDependency(fapiId, DependencyType.REQUIRED))
+        }
+    }
+
+    curseforge {
+        projectId.set("690080")
+        relations.add(CurseRelation("textile", CurseRelationType.REQUIRED))
+        relations.add(CurseRelation("omnicore", CurseRelationType.REQUIRED))
+
+        if (mcData.version >= MinecraftVersions.VERSION_1_16_5) {
+            val kotlinWrapperId = if (mcData.isForgeLike) "kotlin-for-forge" else "fabric-language-kotlin"
+            relations.add(CurseRelation(kotlinWrapperId, CurseRelationType.REQUIRED))
+        }
+
+        if (mcData.isFabric) {
+            val fapiId = if (mcData.isLegacyFabric) "legacy-fabric-api" else "fabric-api"
+            relations.add(CurseRelation(fapiId, CurseRelationType.REQUIRED))
+        }
     }
 }
