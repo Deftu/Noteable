@@ -1,8 +1,12 @@
 package dev.deftu.noteable.client.gui
 
+import dev.deftu.eventbus.on
 import dev.deftu.noteable.client.ClientNoteManager
 import dev.deftu.noteable.client.gui.components.NoteComponent
 import dev.deftu.noteable.note.Note
+import dev.deftu.omnicore.OmniCore
+import dev.deftu.omnicore.client.events.HudRenderEvent
+import dev.deftu.omnicore.client.events.OmniClientEventPassthrough
 import gg.essential.elementa.ElementaVersion
 import gg.essential.elementa.components.UIContainer
 import gg.essential.elementa.components.Window
@@ -11,29 +15,6 @@ import gg.essential.elementa.effects.OutlineEffect
 import gg.essential.universal.UMatrixStack
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
-
-//#if FABRIC
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
-//#elseif FORGE
-//$$ import net.minecraftforge.common.MinecraftForge
-//#if MC >= 1.19.2
-//$$ import net.minecraftforge.client.event.RenderGuiEvent
-//#else
-//$$ import net.minecraftforge.client.event.RenderGameOverlayEvent
-//#endif
-//#if MC <= 1.12.2
-//$$ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-//#endif
-//#else
-//$$ import net.neoforged.neoforge.client.event.RenderGuiEvent
-//$$ import net.neoforged.neoforge.common.NeoForge
-//#endif
-
-//#if MC >= 1.20.1
-//$$ import net.minecraft.client.gui.DrawContext
-//#elseif MC >= 1.16.5
-import net.minecraft.client.util.math.MatrixStack
-//#endif
 
 object HudRenderer {
 
@@ -50,42 +31,23 @@ object HudRenderer {
     } childOf window
 
     fun initialize() {
-        //#if FABRIC
-        HudRenderCallback.EVENT.register { matrixStack, tickDelta ->
-            render(matrixStack)
-        }
-        //#else
-        //#if MC >= 1.19.2
-        //#if FORGE
-        //$$ MinecraftForge
-        //#else
-        //$$ NeoForge
-        //#endif
-        //$$     .EVENT_BUS.addListener<RenderGuiEvent.Post> { event ->
-        //$$     render(
-        //#if MC >= 1.20.1
-        //$$         event.guiGraphics
-        //#else
-        //$$         event.poseStack
-        //#endif
-        //$$     )
-        //$$ }
-        //#elseif MC >= 1.16.5
-        //$$ MinecraftForge.EVENT_BUS.addListener<RenderGameOverlayEvent> { event -> render(event.matrixStack) }
-        //#else
-        //$$ MinecraftForge.EVENT_BUS.register(this)
-        //#endif
-        //#endif
-    }
+        OmniClientEventPassthrough.initialize()
+        OmniCore.eventBus.on<HudRenderEvent> {
+            if (!firstRefresh) {
+                firstRefresh = true
+                refresh0()
+            }
 
-    //#if FORGE && MC <= 1.12.2
-    //$$ @SubscribeEvent
-    //$$ fun onRenderOverlay(event: RenderGameOverlayEvent.Post) {
-    //$$     if (event.type != RenderGameOverlayEvent.ElementType.ALL) return
-    //$$
-    //$$     render()
-    //$$ }
-    //#endif
+            refresh()
+            val matrixStack = UMatrixStack(
+                //#if MC >= 1.16.5
+                matrixStack.toVanillaStack()
+                //#endif
+            )
+            window.draw(matrixStack)
+
+        }
+    }
 
     fun add(note: Note) {
         if (!note.isSticky) {
@@ -127,28 +89,6 @@ object HudRenderer {
                 y = newY.percent
             }
         }
-    }
-
-    private fun render(
-        //#if MC >= 1.20.1
-        //$$ ctx: DrawContext
-        //#elseif MC >= 1.16.5
-        ctx: MatrixStack
-        //#endif
-    ) {
-        if (!firstRefresh) {
-            firstRefresh = true
-            refresh0()
-        }
-
-        refresh()
-        window.draw(UMatrixStack(
-            //#if MC >= 1.20.1
-            //$$ ctx.matrices
-            //#elseif MC >= 1.16.5
-            ctx
-            //#endif
-        ))
     }
 
     private fun refresh() {

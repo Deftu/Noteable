@@ -12,11 +12,11 @@ import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
 import gg.essential.elementa.state.BasicState
-import net.minecraft.client.resource.language.I18n
 import dev.deftu.noteable.client.gui.NoteablePalette
 import dev.deftu.noteable.client.gui.components.ButtonComponent
 import dev.deftu.noteable.client.gui.components.NoteComponent
 import dev.deftu.noteable.client.gui.components.NoteCreateModalComponent
+import dev.deftu.textualizer.minecraft.MCLocalizedTextHolder
 
 class NoteEditorMenu : WindowScreen(
     version = ElementaVersion.V8,
@@ -41,7 +41,7 @@ class NoteEditorMenu : WindowScreen(
         height = 25.pixels
     } childOf window
 
-    private val addButton by ButtonComponent(I18n.translate("gui.${NoteableConstants.ID}.buttons.notes.add")).constrain {
+    private val addButton by ButtonComponent(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.buttons.notes.add").asString()).constrain {
         width = 50.pixels
         height = 25.pixels
     }.onMouseClick {
@@ -49,7 +49,7 @@ class NoteEditorMenu : WindowScreen(
         modal.setReloader(::reload)
     } childOf buttonContainer
 
-    private val deleteButton by ButtonComponent(I18n.translate("gui.${NoteableConstants.ID}.buttons.notes.delete")).constrain {
+    private val deleteButton by ButtonComponent(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.buttons.notes.delete").asString()).constrain {
         x = SiblingConstraint(7.5f)
         width = 50.pixels
         height = 25.pixels
@@ -57,7 +57,7 @@ class NoteEditorMenu : WindowScreen(
         deleteState.set(!deleteState.get())
     } childOf buttonContainer
 
-    private val moveButton by ButtonComponent(I18n.translate("gui.${NoteableConstants.ID}.buttons.notes.move")).constrain {
+    private val moveButton by ButtonComponent(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.buttons.notes.move").asString()).constrain {
         x = SiblingConstraint(7.5f)
         width = 50.pixels
         height = 25.pixels
@@ -65,7 +65,7 @@ class NoteEditorMenu : WindowScreen(
         moveState.set(!moveState.get())
     } childOf buttonContainer
 
-    private val editButton by ButtonComponent(I18n.translate("gui.${NoteableConstants.ID}.buttons.notes.edit")).constrain {
+    private val editButton by ButtonComponent(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.buttons.notes.edit").asString()).constrain {
         x = SiblingConstraint(7.5f)
         width = 50.pixels
         height = 25.pixels
@@ -73,7 +73,7 @@ class NoteEditorMenu : WindowScreen(
         editState.set(!editState.get())
     } childOf buttonContainer
 
-    private val pinButton by ButtonComponent(I18n.translate("gui.${NoteableConstants.ID}.buttons.notes.pin")).constrain {
+    private val pinButton by ButtonComponent(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.buttons.notes.pin").asString()).constrain {
         x = SiblingConstraint(7.5f)
         width = 50.pixels
         height = 25.pixels
@@ -81,22 +81,22 @@ class NoteEditorMenu : WindowScreen(
         pinState.set(!pinState.get())
     } childOf buttonContainer
 
-    private val deleteText by UIText(I18n.translate("gui.${NoteableConstants.ID}.text.notes.delete")).constrain {
+    private val deleteText by UIText(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.notes.delete").asString()).constrain {
         x = 7.5.pixels(true)
         y = 7.5.pixels
         textScale = 1.5.pixels
     } childOf window
-    private val moveText by UIText(I18n.translate("gui.${NoteableConstants.ID}.text.notes.move")).constrain {
+    private val moveText by UIText(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.notes.move").asString()).constrain {
         x = 7.5.pixels(true)
         y = 7.5.pixels
         textScale = 1.5.pixels
     } childOf window
-    private val editText by UIText(I18n.translate("gui.${NoteableConstants.ID}.text.notes.edit")).constrain {
+    private val editText by UIText(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.notes.edit").asString()).constrain {
         x = 7.5.pixels(true)
         y = 7.5.pixels
         textScale = 1.5.pixels
     } childOf window
-    private val pinText by UIText(I18n.translate("gui.${NoteableConstants.ID}.text.notes.pin")).constrain {
+    private val pinText by UIText(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.notes.pin").asString()).constrain {
         x = 7.5.pixels(true)
         y = 7.5.pixels
         textScale = 1.5.pixels

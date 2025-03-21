@@ -30,10 +30,12 @@ toolkitMultiversion {
 
 dependencies {
     val textileVersion = "0.11.1"
-    val omnicoreVersion = "0.23.0"
+    val omnicoreVersion = "0.24.3"
+    val textualizerVersion = "0.3.1"
     implementation("dev.deftu:textile:$textileVersion")
     modImplementation("dev.deftu:textile-$mcData:$textileVersion")
     modImplementation("dev.deftu:omnicore-$mcData:$omnicoreVersion")
+    modImplementation("dev.deftu:textualizer-$mcData:$textualizerVersion")
     modImplementation(includeOrShade("gg.essential:universalcraft-${when (mcData.version) {
         MinecraftVersions.VERSION_1_16_5 -> "1.16.2"
         MinecraftVersions.VERSION_1_18_2 -> "1.18.1"
@@ -48,6 +50,7 @@ dependencies {
         includeOrShade("dev.deftu:textile:$textileVersion")
         includeOrShade("dev.deftu:textile-$mcData:$textileVersion")
         includeOrShade("dev.deftu:omnicore-$mcData:$omnicoreVersion")
+        includeOrShade("dev.deftu:textualizer-$mcData:$textualizerVersion")
     }
 
     if (mcData.isFabric) {

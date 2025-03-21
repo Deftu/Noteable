@@ -9,10 +9,10 @@ import gg.essential.elementa.constraints.SiblingConstraint
 import gg.essential.elementa.dsl.*
 import gg.essential.elementa.effects.OutlineEffect
 import dev.deftu.noteable.client.gui.NoteablePalette
-import dev.deftu.textile.minecraft.MCTranslatableTextHolder
+import dev.deftu.textualizer.minecraft.MCLocalizedTextHolder
 
 class NoteTitleInput : UIContainer() {
-    private val titleInputText by UIText(MCTranslatableTextHolder("gui.${NoteableConstants.ID}.text.modal.input.title.header").asString()).constrain {
+    private val titleInputText by UIText(MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.modal.input.title.header").asString()).constrain {
         textScale = 1.6.pixels
     } childOf this
     private val titleInputBox by UIBlock(NoteablePalette.background).constrain {
@@ -24,7 +24,7 @@ class NoteTitleInput : UIContainer() {
         width = 1f
     ) childOf this
     private val titleInput by UITextInput(
-        placeholder = MCTranslatableTextHolder("gui.${NoteableConstants.ID}.text.modal.input.title.input").asString(),
+        placeholder = MCLocalizedTextHolder("gui.${NoteableConstants.ID}.text.modal.input.title.input").asString(),
         selectionForegroundColor = NoteablePalette.primary
     ).constrain {
         x = 2.5.pixels

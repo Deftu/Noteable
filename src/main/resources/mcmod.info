@@ -6,6 +6,6 @@
         "mcversion": "${mc_version}",
         "description": "${mod_description}",
         "authorList": ["Deftu"],
-        "dependencies": ["textile", "omnicore"]
+        "dependencies": ["textile", "omnicore", "textualizer"]
     }
 ]
