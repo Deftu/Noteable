@@ -2,8 +2,7 @@
 <center>
 
 # [`Noteable`]
-A Minecraft mod adding the capability of
-creating (sticky) notes inside the game.
+Write notes in Minecraft and pin them to your HUD.
 
 [![Ko-Fi Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/donate/kofi-singular_64h.png)](https://shr.deftu.xyz/ko-fi)  
 [![CurseForge Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/available/curseforge_64h.png)](https://www.curseforge.com/minecraft/mc-mods/noteable)
@@ -16,19 +15,29 @@ creating (sticky) notes inside the game.
 
 [![BisectHosting](https://www.bisecthosting.com/partners/custom-banners/8fb6621b-811a-473b-9087-c8c42b50e74c.png)](https://bisecthosting.com/deftu)
 
-## But... Why?
-It's cool! And it's very helpful for managing big projects
-in your survival worlds, or in servers with friends!
-
-## Do my noteses save?
-Yes! They save and will be restored when you restart your
-game.
+## But... why?
+It's cool, and it's really handy for keeping track of big projects in
+your survival worlds, or on servers with friends.
 
 ## How do I use it?
-Noteable requires [OneConfig][oneconfig]. Open the OneConfig menu and pick
-**Notes** in the sidebar to write, edit, pin and delete notes, or run `/noteable`.
-Pinned notes show on your HUD, and you can move and style them in the
-HUD editor.
+Noteable needs [OneConfig][oneconfig]. Open the OneConfig menu and pick
+Notes in the sidebar, or run `/noteable` (or `/notes`). From there you
+can write, edit, pin, copy and delete notes.
+
+The editor's toolbar can drop your coordinates, dimension, biome,
+facing, world or server, player name or the date in at the cursor. It
+can also add checklist items, bullets and dividers.
+
+Pin a note and it gets its own HUD. Move, resize and style it in the
+OneConfig HUD editor like any other HUD. Checklists show up as real
+checkboxes, and you can tick them right on the HUD while chat is open.
+
+## Do my noteses save?
+Yep. Each note is its own file in `config/Noteable`, and everything is
+still there when you restart your game.
+
+## What versions does it support?
+Minecraft 1.21.1 to 26.3 on Fabric, and 1.8.9 on Ornithe.
 
 <div align="center">
 <center>
