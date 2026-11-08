@@ -33,11 +33,11 @@ HUD editor.
 <div align="center">
 <center>
 
-**This project is licensed under [LGPL-3.0][lgpl]**\
+**This project is licensed under [AGPL-3.0-or-later][agpl]**\
 **&copy; 2022 Deftu**
 
 </center>
 </div>
 
-[lgpl]: https://www.gnu.org/licenses/lgpl-3.0.en.html
+[agpl]: https://www.gnu.org/licenses/agpl-3.0.en.html
 [oneconfig]: https://modrinth.com/mod/oneconfig

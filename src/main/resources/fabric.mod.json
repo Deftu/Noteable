@@ -13,7 +13,7 @@
         "issues": "https://github.com/Deftu/Noteable/issues",
         "sources": "https://github.com/Deftu/Noteable"
     },
-    "license": "LGPL-3.0-or-later",
+    "license": "AGPL-3.0-or-later",
     "environment": "client",
     "entrypoints": {
         "client": [
