@@ -24,10 +24,11 @@ in your survival worlds, or in servers with friends!
 Yes! They save and will be restored when you restart your
 game.
 
-## How do I set it up/how do I add/edit/delete/move/pin notes?
-This **requires** [Mod Menu][modmenu]. The config screen can
-be access by clicking on Noteable's entry in the mod menu
-screen.
+## How do I use it?
+Noteable requires [OneConfig][oneconfig]. Open the OneConfig menu and pick
+**Notes** in the sidebar to write, edit, pin and delete notes, or run `/noteable`.
+Pinned notes show on your HUD, and you can move and style them in the
+HUD editor.
 
 <div align="center">
 <center>
@@ -39,4 +40,4 @@ screen.
 </div>
 
 [lgpl]: https://www.gnu.org/licenses/lgpl-3.0.en.html
-[modmenu]: https://modrinth.com/mod/modmenu/
+[oneconfig]: https://modrinth.com/mod/oneconfig

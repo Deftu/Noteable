@@ -3,37 +3,30 @@
     "id": "${mod_id}",
     "version": "${mod_version}",
     "name": "${mod_name}",
-    "description": "A Minecraft mod adding the capability of creating (sticky) notes inside the game.",
-    "icon": "assets/noteable/logo.png",
+    "description": "${mod_description}",
     "authors": [
         "Deftu"
     ],
+    "icon": "assets/noteable/logo.png",
     "contact": {
-        "issues": "https://github.com/Deftu/${mod_name}",
-        "sources": "https://github.com/Deftu/${mod_name}/issues"
+        "homepage": "https://deftu.dev/",
+        "issues": "https://github.com/Deftu/Noteable/issues",
+        "sources": "https://github.com/Deftu/Noteable"
     },
-    "license": "LGPL 3.0",
-    "environment": "*",
+    "license": "LGPL-3.0-or-later",
+    "environment": "client",
     "entrypoints": {
         "client": [
             {
                 "adapter": "kotlin",
-                "value": "dev.deftu.noteable.NoteableEntrypoint"
-            }
-        ],
-        "modmenu": [
-            {
-                "value": "dev.deftu.noteable.client.ModMenuIntegration"
+                "value": "dev.deftu.noteable.Noteable"
             }
         ]
     },
     "depends": {
-        "fabric-api": "*",
-        "fabricloader": ">=0.14.9",
+        "minecraft": "${minecraft_version_range}",
+        "fabricloader": ">=${loader_version}",
         "fabric-language-kotlin": "*",
-        "minecraft": "~${minor_mc_version}",
-        "textile": ">=0.11.1",
-        "omnicore": ">=0.23.3",
-        "textualizer": ">=0.3.1"
+        "oneconfigv1": ">=${oneconfig_version}"
     }
 }
