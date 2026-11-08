@@ -1,85 +1,32 @@
-import groovy.lang.MissingPropertyException
-
 pluginManagement {
     repositories {
-        // Repositories
-        maven("https://maven.deftu.dev/releases")
-        maven("https://maven.fabricmc.net")
-        maven("https://maven.architectury.dev/")
-        maven("https://maven.minecraftforge.net")
-        maven("https://repo.essential.gg/repository/maven-public")
-        maven("https://jitpack.io/")
-
-        // Snapshots
-        maven("https://maven.deftu.dev/snapshots")
-        maven("https://s01.oss.sonatype.org/content/groups/public/")
-        mavenLocal()
-
-        // Default repositories
-        gradlePluginPortal()
         mavenCentral()
-    }
-
-    plugins {
-        kotlin("jvm") version("2.0.0")
-        id("dev.deftu.gradle.multiversion-root") version("2.28.0")
+        gradlePluginPortal()
+        maven("https://maven.fabricmc.net/")
+        maven("https://maven.ornithemc.net/releases")
+        maven("https://maven.kikugie.dev/releases") { name = "KikuGie Releases" }
+        maven("https://maven.kikugie.dev/snapshots") { name = "KikuGie Snapshots" }
+        maven("https://maven.deftu.dev/releases")
+        maven("https://maven.deftu.dev/snapshots")
+        maven("https://maven.architectury.dev")
+        maven("https://repo.polyfrost.org/releases")
+        maven("https://repo.polyfrost.org/snapshots")
+        maven("https://jitpack.io/")
     }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.+")
+    id("dev.kikugie.stonecutter") version "0.9.7"
+    id("dev.kikugie.loom-back-compat") version "0.4.2"
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-val projectName: String = extra["mod.name"]?.toString()
-    ?: throw MissingPropertyException("mod.name has not been set.")
-rootProject.name = projectName
-rootProject.buildFileName = "root.gradle.kts"
+stonecutter {
+    create(rootProject) {
+        versions("1.8.9", "1.21.1", "1.21.4", "1.21.5", "1.21.8", "1.21.10", "1.21.11", "26.1", "26.2", "26.3")
 
-listOf(
-    "1.8.9-forge",
-
-    "1.12.2-forge",
-
-    "1.16.5-forge",
-    "1.16.5-fabric",
-
-    "1.17.1-forge",
-    "1.17.1-fabric",
-
-    "1.18.2-forge",
-    "1.18.2-fabric",
-
-    "1.19.2-forge",
-    "1.19.2-fabric",
-
-    "1.19.4-forge",
-    "1.19.4-fabric",
-
-    "1.20.1-forge",
-    "1.20.1-fabric",
-
-    "1.20.4-forge",
-    "1.20.4-neoforge",
-    "1.20.4-fabric",
-
-    "1.20.6-neoforge",
-    "1.20.6-fabric",
-
-    "1.21.1-neoforge",
-    "1.21.1-fabric",
-
-    "1.21.2-neoforge",
-    "1.21.2-fabric",
-
-    "1.21.3-neoforge",
-    "1.21.3-fabric",
-
-    "1.21.4-neoforge",
-    "1.21.4-fabric"
-).forEach { version ->
-    include(":$version")
-    project(":$version").apply {
-        projectDir = file("versions/$version")
-        buildFileName = "../../build.gradle.kts"
+        vcsVersion = "26.3"
     }
 }
+
+rootProject.name = "Noteable"
