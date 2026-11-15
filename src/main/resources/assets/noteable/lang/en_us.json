@@ -1,4 +1,15 @@
 {
     "noteable.page.notes": "Notes",
-    "noteable.page.notes.search": "Search notes..."
+    "noteable.page.notes.search": "Search notes...",
+    "noteable.menu.open": "Open",
+    "noteable.menu.pin": "Pin to HUD",
+    "noteable.menu.unpin": "Unpin",
+    "noteable.menu.copy": "Copy",
+    "noteable.menu.duplicate": "Duplicate",
+    "noteable.menu.delete": "Delete",
+    "noteable.delete.title": "Delete note?",
+    "noteable.delete.text": "This can't be undone.",
+    "noteable.delete.confirm": "Delete note",
+    "noteable.pinned.empty": "No notes are pinned. Pin one from the Notes page.",
+    "noteable.picker.empty": "You have no notes yet. Create one from the Notes page."
 }

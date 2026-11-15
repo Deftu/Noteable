@@ -28,10 +28,15 @@ object NoteActions {
         return note
     }
 
+    fun duplicate(note: Note): Note {
+        val copy = NoteLibrary.create(note.title, note.content).let { NoteLibrary.setIcon(it.uuid, note.icon) ?: it }
+        if (NoteableConfig.pinNewNotes) NoteHuds.pin(copy)
+        return copy
+    }
+
     @OptIn(ExperimentalOneConfigUiApi::class)
     fun openNotes(focus: Note? = null) {
-        NotesPage.focus(focus)
-        OneConfigUI.open(NotesPage)
+        OneConfigUI.open(NotesPage, NotesPage.Focus(focus?.uuid))
     }
 
     fun announceCreated(note: Note) {

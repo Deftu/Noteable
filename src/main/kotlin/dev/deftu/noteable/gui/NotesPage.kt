@@ -1,32 +1,17 @@
-@file:OptIn(ExperimentalOneConfigUiApi::class, ExperimentalLayoutApi::class)
+@file:OptIn(ExperimentalOneConfigUiApi::class)
 
 package dev.deftu.noteable.gui
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.interaction.collectIsHoveredAsState
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,31 +20,40 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerIcon
-import androidx.compose.ui.input.pointer.pointerHoverIcon
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import dev.deftu.noteable.NoteActions
 import dev.deftu.noteable.Noteable
-import dev.deftu.noteable.PlayerContext
 import dev.deftu.noteable.note.Note
 import dev.deftu.noteable.note.NoteLibrary
-import kotlinx.coroutines.delay
 import org.polyfrost.oneconfig.api.config.v1.Property
 import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
+import org.polyfrost.oneconfig.api.ui.v1.OneConfigUI
+import org.polyfrost.oneconfig.api.ui.v1.components.Badge
+import org.polyfrost.oneconfig.api.ui.v1.components.Card
+import org.polyfrost.oneconfig.api.ui.v1.components.CardGrid
 import org.polyfrost.oneconfig.api.ui.v1.components.Chip
+import org.polyfrost.oneconfig.api.ui.v1.components.Confirm
+import org.polyfrost.oneconfig.api.ui.v1.components.ControlSize
+import org.polyfrost.oneconfig.api.ui.v1.components.ControlStyle
+import org.polyfrost.oneconfig.api.ui.v1.components.EmptyState
 import org.polyfrost.oneconfig.api.ui.v1.components.Icon
 import org.polyfrost.oneconfig.api.ui.v1.components.IconButton
+import org.polyfrost.oneconfig.api.ui.v1.components.MasterDetailLayout
+import org.polyfrost.oneconfig.api.ui.v1.components.MenuAction
+import org.polyfrost.oneconfig.api.ui.v1.components.MenuEntry
+import org.polyfrost.oneconfig.api.ui.v1.components.MenuSeparator
+import org.polyfrost.oneconfig.api.ui.v1.components.RadioGroup
+import org.polyfrost.oneconfig.api.ui.v1.components.SurfaceKind
 import org.polyfrost.oneconfig.api.ui.v1.components.Text
-import org.polyfrost.oneconfig.api.ui.v1.components.Tooltip
-import org.polyfrost.oneconfig.api.ui.v1.components.onClick
-import org.polyfrost.oneconfig.api.ui.v1.components.rememberInteractionSource
+import org.polyfrost.oneconfig.api.ui.v1.components.TextButton
+import org.polyfrost.oneconfig.api.ui.v1.components.contextMenu
+import org.polyfrost.oneconfig.api.ui.v1.components.themedSurface
 import org.polyfrost.oneconfig.api.ui.v1.page.OneConfigPage
 import org.polyfrost.oneconfig.api.ui.v1.page.PageGroup
 import org.polyfrost.oneconfig.api.ui.v1.page.PageText
 import org.polyfrost.oneconfig.api.ui.v1.page.currentPageSearchQuery
+import org.polyfrost.oneconfig.api.ui.v1.page.resolve
 import org.polyfrost.oneconfig.api.ui.v1.theme.OneConfigTheme
 import java.time.Instant
 import java.time.LocalDate
@@ -84,13 +78,35 @@ object NotesPage : OneConfigPage(
 
     internal var selected by mutableStateOf<UUID?>(null)
 
-    /** Selects [note] the next time the page is shown, or clears the selection */
-    fun focus(note: Note?) {
-        selected = note?.uuid
-    }
+    private var handledFocus: Focus? = null
+
+    class Focus(val note: UUID?)
 
     @Composable
-    override fun Content() = NotesScreen()
+    override fun Content() {
+        val focus = OneConfigUI.currentPageArgument as? Focus
+        LaunchedEffect(focus) {
+            if (focus != null && focus !== handledFocus) {
+                handledFocus = focus
+                selected = focus.note
+            }
+        }
+        NotesScreen()
+    }
+}
+
+private object NoteText {
+    val OPEN = PageText.translatable("noteable.menu.open", "Open")
+    val PIN = PageText.translatable("noteable.menu.pin", "Pin to HUD")
+    val UNPIN = PageText.translatable("noteable.menu.unpin", "Unpin")
+    val COPY = PageText.translatable("noteable.menu.copy", "Copy")
+    val DUPLICATE = PageText.translatable("noteable.menu.duplicate", "Duplicate")
+    val DELETE = PageText.translatable("noteable.menu.delete", "Delete")
+    val DELETE_TITLE = PageText.translatable("noteable.delete.title", "Delete note?")
+    val DELETE_TEXT = PageText.translatable("noteable.delete.text", "This can't be undone.")
+    val DELETE_CONFIRM = PageText.translatable("noteable.delete.confirm", "Delete note")
+    val NO_PINNED = PageText.translatable("noteable.pinned.empty", "No notes are pinned. Pin one from the Notes page.")
+    val NO_NOTES_TO_PICK = PageText.translatable("noteable.picker.empty", "You have no notes yet. Create one from the Notes page.")
 }
 
 private enum class NoteFilter(val label: String) {
@@ -116,114 +132,104 @@ private fun NotesScreen() {
     }
     val selected = NotesPage.selected?.let { uuid -> all.firstOrNull { it.uuid == uuid } }
 
-    Column(Modifier.fillMaxSize().padding(start = 24.dp, end = 24.dp, top = 16.dp)) {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (option in NoteFilter.entries) Chip(option.label, filter == option) { filter = option }
+    val spacing = theme.spacing
+    Column(Modifier.fillMaxSize().padding(start = spacing.xxl, end = spacing.xxl, top = spacing.xl)) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(spacing.m)) {
+            for (option in NoteFilter.entries) Chip(option.label, filter == option, { filter = option })
             Spacer(Modifier.weight(1f))
-            Text(countLabel(shown.size, all.size), Modifier, theme.textColorSecondary, 12.sp)
-            Tooltip({ TooltipText("Open notes folder") }, Modifier, Alignment.BottomCenter) {
-                IconOnlyButton("folder") { NoteActions.openFolder() }
-            }
-            SmallButton("New note", "plus", hierarchy = ButtonHierarchy.PRIMARY) {
-                NotesPage.focus(NoteActions.create())
-            }
+            Text(countLabel(shown.size, all.size), Modifier, theme.textColorSecondary, OneConfigTheme.typography.small)
+            IconButton("folder", "Open notes folder", NoteActions::openFolder)
+            TextButton("New note", "plus", { NotesPage.selected = NoteActions.create().uuid }, style = ControlStyle.Primary)
         }
 
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(spacing.xl))
 
-        Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            Box(Modifier.weight(1f).fillMaxHeight()) {
+        MasterDetailLayout(
+            list = {
                 when {
-                    all.isEmpty() -> EmptyState("No notes yet. Create one with New note.")
-                    shown.isEmpty() -> EmptyState(if (filter == NoteFilter.PINNED && query.isEmpty()) "No notes are pinned to your HUD." else "No notes match that search.")
+                    all.isEmpty() -> EmptyState("No notes yet. Create one with New note.", Modifier.fillMaxSize(), icon = Noteable.ICON)
+                    shown.isEmpty() -> EmptyState(
+                        if (filter == NoteFilter.PINNED && query.isEmpty()) "No notes are pinned to your HUD." else "No notes match that search.",
+                        Modifier.fillMaxSize(),
+                        icon = Noteable.ICON,
+                    )
                     else -> NoteGrid(shown, pinned, selected?.uuid) { NotesPage.selected = if (NotesPage.selected == it.uuid) null else it.uuid }
                 }
-            }
-            // Always laid out, so opening a note never reflows the grid
-            if (selected != null) {
-                EditorPane(selected, selected.uuid in pinned) { NotesPage.selected = null }
-            } else {
-                EditorPlaceholder(all.isNotEmpty())
-            }
-        }
+            },
+            detail = {
+                // Always laid out, so opening a note never reflows the grid
+                if (selected != null) {
+                    EditorPane(selected, selected.uuid in pinned) { NotesPage.selected = null }
+                } else {
+                    EditorPlaceholder(all.isNotEmpty())
+                }
+            },
+            detailWidth = EDITOR_WIDTH,
+        )
     }
 }
 
 @Composable
 private fun NoteGrid(notes: List<Note>, pinned: Set<UUID>, selected: UUID?, onSelect: (Note) -> Unit) {
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(CARD_MIN_WIDTH),
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 24.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(notes, key = { it.uuid }) { note ->
-            NoteCard(note, note.uuid in pinned, note.uuid == selected) { onSelect(note) }
-        }
+    CardGrid(notes, key = { it.uuid }, Modifier.fillMaxSize(), minCellWidth = CARD_MIN_WIDTH) { note ->
+        NoteCard(note, note.uuid in pinned, note.uuid == selected) { onSelect(note) }
     }
 }
 
 @Composable
 private fun NoteCard(note: Note, pinned: Boolean, selected: Boolean, onClick: () -> Unit) {
     val theme = OneConfigTheme.current
-    val interaction = rememberInteractionSource()
-    val hovered by interaction.collectIsHoveredAsState()
-    val border by animateColorAsState(
-        when {
-            selected -> OneConfigTheme.accent
-            hovered -> theme.textColorSecondary.copy(alpha = 0.5f)
-            else -> theme.borderColor
-        },
-    )
+    val typography = OneConfigTheme.typography
+    val deleteTitle = NoteText.DELETE_TITLE.resolve()
+    val deleteText = NoteText.DELETE_TEXT.resolve()
+    val deleteConfirm = NoteText.DELETE_CONFIRM.resolve()
 
-    Column(
+    val spacing = theme.spacing
+
+    Card(
         Modifier
             .fillMaxWidth()
             .height(CARD_HEIGHT)
-            .clip(theme.modCardShape)
-            .background(theme.modCardBackground, theme.modCardShape)
-            .border(1.dp, border, theme.modCardShape)
-            .hoverable(interaction)
-            .pointerHoverIcon(PointerIcon.Hand)
-            .onClick(interaction, onClick)
-            .padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp),
+            .contextMenu { noteMenu(note, pinned, deleteTitle, deleteText, deleteConfirm) },
+        onClick,
+        note.displayTitle,
+        selected,
+        contentPadding = PaddingValues(spacing.l),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            Icon(note.icon.ifEmpty { Noteable.ICON }, theme.textColor, Modifier.size(16.dp))
-            ClippedText(note.displayTitle, Modifier.weight(1f), theme.textColor, 14.sp, FontWeight.Medium, 1)
-        }
-        ClippedText(
-            note.content.ifBlank { "No content" },
-            Modifier.weight(1f),
-            theme.textColorSecondary,
-            12.sp,
-            FontWeight.Normal,
-            3,
-        )
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(timeLabel(note.updatedAt), Modifier.weight(1f), theme.textColorSecondary, 11.sp)
-            if (pinned) StatusTag("Pinned")
+        Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(spacing.s)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(spacing.m)) {
+                Icon(note.icon.ifEmpty { Noteable.ICON }, null, Modifier.size(16.dp), theme.textColor)
+                Text(note.displayTitle, Modifier.weight(1f), theme.textColor, typography.label, 1, TextOverflow.Ellipsis)
+            }
+            Text(note.content.ifBlank { "No content" }, Modifier.weight(1f), theme.textColorSecondary, typography.small, 3, TextOverflow.Ellipsis)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(timeLabel(note.updatedAt), Modifier.weight(1f), theme.textColorSecondary, typography.caption)
+                if (pinned) Badge("Pinned")
+            }
         }
     }
 }
 
+private fun noteMenu(note: Note, pinned: Boolean, deleteTitle: String, deleteText: String, deleteConfirm: String): List<MenuEntry> = listOf(
+    MenuAction(NoteText.OPEN, { NotesPage.selected = note.uuid }, icon = "text-input"),
+    MenuAction(if (pinned) NoteText.UNPIN else NoteText.PIN, { NoteActions.setPinned(note, !pinned) }, icon = "hud"),
+    MenuAction(NoteText.COPY, { NoteActions.copy(note) }, icon = "copy"),
+    MenuAction(NoteText.DUPLICATE, { NotesPage.selected = NoteActions.duplicate(note).uuid }, icon = "copy-plus"),
+    MenuSeparator,
+    MenuAction(
+        NoteText.DELETE,
+        { Confirm.ask(deleteTitle, deleteText, deleteConfirm, onConfirm = { NoteActions.delete(note) }) },
+        icon = "trash",
+        danger = true,
+    ),
+)
+
 @Composable
 private fun EditorPlaceholder(hasNotes: Boolean) {
-    val theme = OneConfigTheme.current
-    Column(
-        Modifier.editorFrame().padding(14.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Text(
-            if (hasNotes) "Select a note to edit it." else "Notes you create open here.",
-            Modifier,
-            theme.textColorSecondary,
-            12.sp,
-        )
-    }
+    EmptyState(
+        if (hasNotes) "Select a note to edit it." else "Notes you create open here.",
+        Modifier.editorFrame(),
+    )
 }
 
 /** The config page's list of pinned notes */
@@ -232,23 +238,24 @@ fun PinnedNotesList() {
     val theme = OneConfigTheme.current
     val revision = NoteHuds.revision
     val pinned = remember(revision) { NoteHuds.pinnedNotes() }
+    val spacing = theme.spacing
 
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(spacing.s)) {
         if (pinned.isEmpty()) {
-            Text("No notes are pinned. Pin one from the Notes page.", Modifier.padding(vertical = 4.dp), theme.textColorSecondary, 12.sp)
+            Text(NoteText.NO_PINNED.resolve(), Modifier.padding(vertical = spacing.xs), theme.textColorSecondary, OneConfigTheme.typography.small)
         }
         for (note in pinned) {
             Row(
-                Modifier.fillMaxWidth().background(theme.componentBackground, theme.buttonShape).padding(start = 12.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                Modifier.fillMaxWidth().themedSurface(SurfaceKind.Field).padding(start = spacing.l, end = spacing.xs, top = spacing.xs, bottom = spacing.xs),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalArrangement = Arrangement.spacedBy(spacing.s),
             ) {
-                ClippedText(note.displayTitle, Modifier.weight(1f), theme.textColor, 12.sp, FontWeight.Medium, 1)
-                SmallButton("Edit", null) { NoteActions.openNotes(note) }
-                SmallButton("Unpin", null) { NoteActions.setPinned(note, false) }
+                Text(note.displayTitle, Modifier.weight(1f), theme.textColor, OneConfigTheme.typography.label, 1, TextOverflow.Ellipsis)
+                TextButton("Edit", { NoteActions.openNotes(note) }, size = ControlSize.Compact)
+                TextButton("Unpin", { NoteActions.setPinned(note, false) }, size = ControlSize.Compact)
             }
         }
-        SmallButton("Open notes", "text") { NoteActions.openNotes() }
+        TextButton("Open notes", "text", { NoteActions.openNotes() })
     }
 }
 
@@ -261,53 +268,21 @@ fun NotePicker(prop: Property<*>) {
     // Read every recomposition: the HUD's note can change from elsewhere, such as when the HUD is duplicated
     val current = (prop.get() as? String).orEmpty()
 
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        if (notes.isEmpty()) {
-            Text("You have no notes yet. Create one from the Notes page.", Modifier.padding(vertical = 4.dp), theme.textColorSecondary, 12.sp)
-        }
-        for (note in notes) {
-            val id = note.uuid.toString()
-            val selected = id == current
-            val interaction = rememberInteractionSource()
-            val hovered by interaction.collectIsHoveredAsState()
-            val border by animateColorAsState(
-                when {
-                    selected -> OneConfigTheme.accent
-                    hovered -> theme.textColorSecondary.copy(alpha = 0.6f)
-                    else -> theme.borderColor
-                },
-            )
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .height(32.dp)
-                    .background(theme.componentBackground, theme.buttonShape)
-                    .border(1.dp, border, theme.buttonShape)
-                    .hoverable(interaction)
-                    .pointerHoverIcon(PointerIcon.Hand)
-                    .onClick(interaction) {
-                        @Suppress("UNCHECKED_CAST")
-                        (prop as Property<String>).set(id)
-                    }
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                ClippedText(note.displayTitle, Modifier.weight(1f), theme.textColor, 12.sp, FontWeight.Medium, 1)
-                if (selected) Icon("tick", OneConfigTheme.accent, Modifier.size(16.dp))
-            }
-        }
+    if (notes.isEmpty()) {
+        Text(NoteText.NO_NOTES_TO_PICK.resolve(), Modifier.padding(vertical = theme.spacing.xs), theme.textColorSecondary, OneConfigTheme.typography.small)
+        return
     }
-}
-
-@Composable
-private fun EmptyState(message: String) {
-    val theme = OneConfigTheme.current
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-        Icon(Noteable.ICON, theme.textColorSecondary, Modifier.size(32.dp))
-        Spacer(Modifier.height(12.dp))
-        Text(message, Modifier, theme.textColorSecondary, 14.sp)
-    }
+    RadioGroup<Note?>(
+        notes.firstOrNull { it.uuid.toString() == current },
+        notes,
+        { note ->
+            @Suppress("UNCHECKED_CAST")
+            if (note != null) (prop as Property<String>).set(note.uuid.toString())
+        },
+        Modifier.fillMaxWidth(),
+        label = { it?.displayTitle.orEmpty() },
+        fillWidth = true,
+    )
 }
 
 

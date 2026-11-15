@@ -5,9 +5,9 @@ mod.version = "3.0.0"
 mod.description = "Create notes in game and pin them to your HUD."
 
 deps.fabric_loader = "0.19.3"
-deps.oneconfig = "1.6.2"
+deps.oneconfig = "1.8.0"
 
-loomx.loom_version = "1.17-SNAPSHOT"
+loomx.loom_version = "1.19-SNAPSHOT"
 
 publish.modrinth = "8CZovXCd"
 publish.curseforge = "690080"

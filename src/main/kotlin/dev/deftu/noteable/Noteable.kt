@@ -5,7 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import com.mojang.brigadier.context.CommandContext
 import dev.deftu.noteable.config.NoteableConfig
 import dev.deftu.noteable.gui.NotesPage
-import dev.deftu.noteable.gui.NoteHudInput
 import dev.deftu.noteable.gui.NoteHuds
 import dev.deftu.noteable.note.LegacyMigration
 import dev.deftu.noteable.note.Note
@@ -31,8 +30,7 @@ object Noteable : ClientModInitializer {
         NoteLibrary.load()
         LegacyMigration.run()
         NoteHuds.register()
-        NoteHudInput.register()
-        if (OneConfigPages.byId(NotesPage.id) == null) OneConfigPages.register(NotesPage)
+        OneConfigPages.registerIfAbsent(NotesPage)
         CommandManager.register(command(ID))
         CommandManager.register(command("notes"))
     }

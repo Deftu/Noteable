@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalOneConfigUiApi::class)
+
 package dev.deftu.noteable.gui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableIntStateOf
 import dev.deftu.noteable.Noteable
 import dev.deftu.noteable.note.Note
@@ -33,8 +36,13 @@ import org.polyfrost.oneconfig.api.config.v1.annotations.Switch
 import org.polyfrost.oneconfig.api.hud.v1.Font
 import org.polyfrost.oneconfig.api.hud.v1.Hud
 import org.polyfrost.oneconfig.api.hud.v1.HudManager
+import org.polyfrost.oneconfig.api.hud.v1.clickRegion
+import org.polyfrost.oneconfig.api.hud.v1.removeClickRegion
 import org.polyfrost.oneconfig.api.notifications.v1.Notifications
 import org.polyfrost.oneconfig.api.config.v1.Property
+import org.polyfrost.oneconfig.api.config.v1.MetaKeys
+import org.polyfrost.oneconfig.api.config.v1.set
+import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
 import java.util.UUID
 import java.util.function.Predicate
 
@@ -80,6 +88,9 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
     @Transient
     private var optionsRevision = mutableIntStateOf(0)
 
+    @Transient
+    private var checkRegions: Set<String> = emptySet()
+
     init {
         padLeft = 4f
         padRight = 4f
@@ -96,7 +107,7 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
     override fun addToSerialized(tree: Tree) {
         tree["noteId"] = ktProperty(::noteId, "Note", "The note this HUD shows.").apply {
             addMetadata("visualizer", Visualizer { prop -> NotePicker(prop) })
-            addMetadata("fullWidth", true)
+            this[MetaKeys.FULL_WIDTH] = true
         }
     }
 
@@ -114,6 +125,7 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
 
     override fun clone(): Hud = (super.clone() as NoteHud).apply {
         optionsRevision = mutableIntStateOf(0)
+        checkRegions = emptySet()
     }
 
     override fun update(): Boolean = false
@@ -158,6 +170,12 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
         val icon = if (showIcon && title != null && (note != null || !isReal)) iconBitmap(note?.icon.orEmpty(), minecraft) else null
         val filter = if (minecraft) FilterQuality.None else FilterQuality.Low
         val uuid = note?.uuid ?: PREVIEW_ID
+
+        val regions = if (isReal) blocks.mapNotNullTo(HashSet()) { (it as? NoteBlock.Check)?.let { check -> checkRegion(check.line) } } else emptySet()
+        SideEffect {
+            for (id in checkRegions - regions) removeClickRegion(id)
+            checkRegions = regions
+        }
 
         // Dividers get an exact width from the measured text: a fill-width child is left out of its column's first
         // measuring pass, so the column (and the background drawn from it) would come up short until the next layout
@@ -209,7 +227,8 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
                                         val box = CHECK_BOX * scale
                                         val bx = x + (w - box) / 2f
                                         val by = y + (h - box) / 2f
-                                        val hovered = isReal && NoteHudInput.track(this, this@NoteHud, uuid,block.line, bx, by, box, box)
+                                        val line = block.line
+                                        val hovered = isReal && this@NoteHud.clickRegion(checkRegion(line), bx, by, box, box) { NoteLibrary.toggleCheck(uuid, line) }
                                         val radius = if (minecraft) 0f else scale
                                         if (hovered) rect(bx, by, box, box, color.withAlpha(0.2f), radius)
                                         rectStroke(bx, by, box, box, if (block.checked) faded else color, scale.coerceAtLeast(1f), radius)
@@ -286,6 +305,8 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
         private val icons = HashMap<String, PolyBitmap?>()
 
         val PREVIEW_ID: UUID = UUID(0L, 0L)
+
+        fun checkRegion(line: Int) = "check:$line"
         val PREVIEW = NoteBlocks.parse("Pin a note to show it here.\n- Bullets\n[x] Checklists\n---\nAnd dividers")
 
         /** Minecraft-font HUDs use OneConfig's pixel icon when one exists, like the Minecraft themes do */

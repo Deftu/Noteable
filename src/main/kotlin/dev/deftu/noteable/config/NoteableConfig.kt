@@ -4,7 +4,9 @@ import dev.deftu.noteable.NoteActions
 import dev.deftu.noteable.Noteable
 import dev.deftu.noteable.gui.PinnedNotesList
 import org.polyfrost.oneconfig.api.config.v1.KtConfig
+import org.polyfrost.oneconfig.api.config.v1.MetaKeys
 import org.polyfrost.oneconfig.api.config.v1.Visualizer
+import org.polyfrost.oneconfig.api.config.v1.set
 
 object NoteableConfig : KtConfig("noteable.json", Noteable.NAME, Category.QOL, Noteable.ICON) {
     private const val GENERAL = "General"
@@ -39,5 +41,5 @@ object NoteableConfig : KtConfig("noteable.json", Noteable.NAME, Category.QOL, N
         GENERAL,
         "HUD",
         Visualizer { PinnedNotesList() },
-    ) { addMetadata("fullWidth", true) }
+    ) { this[MetaKeys.FULL_WIDTH] = true }
 }
