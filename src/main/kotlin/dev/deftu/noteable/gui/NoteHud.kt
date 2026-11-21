@@ -10,14 +10,14 @@ import dev.deftu.noteable.note.Note
 import dev.deftu.noteable.note.NoteBlock
 import dev.deftu.noteable.note.NoteBlocks
 import dev.deftu.noteable.note.NoteLibrary
-import org.polyfrost.compose.composables.PolyBox
-import org.polyfrost.compose.composables.PolyCanvas
-import org.polyfrost.compose.composables.PolyColumn
-import org.polyfrost.compose.composables.PolyMcText
+import org.polyfrost.compose.composables.NodeBox
+import org.polyfrost.compose.composables.NodeCanvas
+import org.polyfrost.compose.composables.NodeColumn
+import org.polyfrost.compose.composables.NodeMcText
 import org.polyfrost.compose.composables.PolyModifier
-import org.polyfrost.compose.composables.PolyRow
-import org.polyfrost.compose.composables.PolySpacer
-import org.polyfrost.compose.composables.PolyText
+import org.polyfrost.compose.composables.NodeRow
+import org.polyfrost.compose.composables.NodeSpacer
+import org.polyfrost.compose.composables.NodeText
 import org.polyfrost.compose.composables.align
 import org.polyfrost.compose.composables.padding
 import org.polyfrost.compose.composables.size
@@ -195,12 +195,12 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
             } ?: 0f,
         )
 
-        PolyBox(outer) {
-            PolyColumn(SECTION_GAP * scale, if (static) PolyModifier.align(alignment) else PolyModifier) {
+        NodeBox(outer) {
+            NodeColumn(SECTION_GAP * scale, if (static) PolyModifier.align(alignment) else PolyModifier) {
                 if (title != null) {
-                    PolyRow(ICON_GAP * scale) {
+                    NodeRow(ICON_GAP * scale) {
                         if (icon != null) {
-                            PolyCanvas(PolyModifier.size(lineHeight, lineHeight)) { x, y, w, h ->
+                            NodeCanvas(PolyModifier.size(lineHeight, lineHeight)) { x, y, w, h ->
                                 image(icon, x, y, w, h, 0f, 0f, 1f, 1f, color, filter)
                             }
                         }
@@ -209,21 +209,21 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
                 }
                 if (title != null && blocks.isNotEmpty() && titleDivider) Rule(rule, scale, ruleWidth)
                 if (blocks.isNotEmpty()) {
-                    PolyColumn(LINE_GAP * scale) {
+                    NodeColumn(LINE_GAP * scale) {
                         for (block in blocks) {
                             when (block) {
                                 is NoteBlock.Text -> Lines(block.text, color, minecraft)
-                                is NoteBlock.Blank -> PolySpacer(height = lineHeight / 2f)
+                                is NoteBlock.Blank -> NodeSpacer(height = lineHeight / 2f)
                                 is NoteBlock.Divider -> Rule(rule, scale, ruleWidth)
-                                is NoteBlock.Bullet -> PolyRow(MARKER_GAP * scale) {
-                                    PolyCanvas(PolyModifier.size(BULLET_WIDTH * scale, lineHeight)) { x, y, w, h ->
+                                is NoteBlock.Bullet -> NodeRow(MARKER_GAP * scale) {
+                                    NodeCanvas(PolyModifier.size(BULLET_WIDTH * scale, lineHeight)) { x, y, w, h ->
                                         val dot = BULLET_DOT * scale
                                         rect(x + (w - dot) / 2f, y + (h - dot) / 2f, dot, dot, color, if (minecraft) 0f else dot / 2f)
                                     }
                                     Lines(block.text, color, minecraft)
                                 }
-                                is NoteBlock.Check -> PolyRow(MARKER_GAP * scale) {
-                                    PolyCanvas(PolyModifier.size(lineHeight, lineHeight), live = true) { x, y, w, h ->
+                                is NoteBlock.Check -> NodeRow(MARKER_GAP * scale) {
+                                    NodeCanvas(PolyModifier.size(lineHeight, lineHeight), live = true) { x, y, w, h ->
                                         val box = CHECK_BOX * scale
                                         val bx = x + (w - box) / 2f
                                         val by = y + (h - box) / 2f
@@ -248,7 +248,7 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
 
     @Composable
     private fun Rule(color: PolyColor, scale: Float, width: Float) {
-        PolyCanvas(PolyModifier.size(width, RULE_SPACE * scale)) { x, y, w, h ->
+        NodeCanvas(PolyModifier.size(width, RULE_SPACE * scale)) { x, y, w, h ->
             val thickness = scale.coerceAtLeast(1f)
             rect(x, y + (h - thickness) / 2f, w, thickness, color)
         }
@@ -257,10 +257,10 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
     @Composable
     private fun Lines(text: String, color: PolyColor, minecraft: Boolean, strike: Boolean = false) {
         val shadow = if (showShadow) PolyColor(shadowColor, shadowChroma, shadowChromaSpeed) else null
-        PolyColumn(LINE_GAP * textScale) {
+        NodeColumn(LINE_GAP * textScale) {
             for (line in prepare(text)) {
                 if (minecraft) {
-                    PolyMcText(
+                    NodeMcText(
                         text = styled(line, strike),
                         outlineColor = if (shadow != null && fullShadow) shadow else null,
                         color = color,
@@ -268,7 +268,7 @@ class NoteHud : Hud("note.json", "Note", Category.INFO) {
                         scale = textScale,
                     )
                 } else {
-                    PolyText(
+                    NodeText(
                         text = line,
                         color = color,
                         fontSize = POPPINS_SIZE * textScale,
