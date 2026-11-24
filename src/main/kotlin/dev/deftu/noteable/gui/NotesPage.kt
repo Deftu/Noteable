@@ -26,6 +26,7 @@ import dev.deftu.noteable.NoteActions
 import dev.deftu.noteable.Noteable
 import dev.deftu.noteable.note.Note
 import dev.deftu.noteable.note.NoteLibrary
+import org.polyfrost.compose.host.controller.ControllerButton
 import org.polyfrost.oneconfig.api.config.v1.Property
 import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
 import org.polyfrost.oneconfig.api.ui.v1.OneConfigUI
@@ -48,6 +49,7 @@ import org.polyfrost.oneconfig.api.ui.v1.components.SurfaceKind
 import org.polyfrost.oneconfig.api.ui.v1.components.Text
 import org.polyfrost.oneconfig.api.ui.v1.components.TextButton
 import org.polyfrost.oneconfig.api.ui.v1.components.contextMenu
+import org.polyfrost.oneconfig.api.ui.v1.components.controllerShortcut
 import org.polyfrost.oneconfig.api.ui.v1.components.themedSurface
 import org.polyfrost.oneconfig.api.ui.v1.page.OneConfigPage
 import org.polyfrost.oneconfig.api.ui.v1.page.PageGroup
@@ -190,7 +192,12 @@ private fun NoteCard(note: Note, pinned: Boolean, selected: Boolean, onClick: ()
         Modifier
             .fillMaxWidth()
             .height(CARD_HEIGHT)
-            .contextMenu { noteMenu(note, pinned, deleteTitle, deleteText, deleteConfirm) },
+            .contextMenu { noteMenu(note, pinned, deleteTitle, deleteText, deleteConfirm) }
+            .controllerShortcut(
+                ControllerButton.Y,
+                if (pinned) "noteable.menu.unpin" else "noteable.menu.pin",
+                if (pinned) "Unpin" else "Pin to HUD",
+            ) { NoteActions.setPinned(note, !pinned) },
         onClick,
         note.displayTitle,
         selected,
