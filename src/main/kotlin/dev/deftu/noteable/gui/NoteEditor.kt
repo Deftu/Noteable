@@ -20,13 +20,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +36,6 @@ import dev.deftu.noteable.Noteable
 import dev.deftu.noteable.PlayerContext
 import dev.deftu.noteable.note.Note
 import dev.deftu.noteable.note.NoteLibrary
-import org.polyfrost.compose.host.BackStack
 import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
 import org.polyfrost.oneconfig.api.ui.v1.components.ArmedConfirmButton
 import org.polyfrost.oneconfig.api.ui.v1.components.Badge
@@ -54,7 +51,6 @@ import org.polyfrost.oneconfig.api.ui.v1.components.TextButton
 import org.polyfrost.oneconfig.api.ui.v1.components.TextField
 import org.polyfrost.oneconfig.api.ui.v1.components.TooltipPlacement
 import org.polyfrost.oneconfig.api.ui.v1.components.fieldFrame
-import org.polyfrost.oneconfig.api.ui.v1.components.isControllerMode
 import org.polyfrost.oneconfig.api.ui.v1.components.rememberInteractionSource
 import org.polyfrost.oneconfig.api.ui.v1.components.themedSurface
 import org.polyfrost.oneconfig.api.ui.v1.theme.OneConfigTheme
@@ -106,14 +102,6 @@ internal fun EditorPane(note: Note, pinned: Boolean, onClose: () -> Unit) {
     var title by remember(note.uuid) { mutableStateOf(note.title) }
     var content by remember(note.uuid) { mutableStateOf(TextFieldValue(note.content, TextRange(note.content.length))) }
     var pickingIcon by remember(note.uuid) { mutableStateOf(false) }
-    val latestClose by rememberUpdatedState(onClose)
-
-    if (isControllerMode()) {
-        DisposableEffect(note.uuid) {
-            val back = BackStack.register { latestClose() }
-            onDispose { back.close() }
-        }
-    }
 
     // Ticking a checklist on the HUD edits the note from outside this editor
     LaunchedEffect(note.content) {

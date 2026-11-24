@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,13 +22,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.deftu.noteable.NoteActions
 import dev.deftu.noteable.Noteable
 import dev.deftu.noteable.note.Note
 import dev.deftu.noteable.note.NoteLibrary
+import org.polyfrost.compose.host.BackStack
 import org.polyfrost.compose.host.controller.ControllerButton
+import org.polyfrost.compose.host.controller.Controllers
+import org.polyfrost.compose.host.controller.isFromController
 import org.polyfrost.oneconfig.api.config.v1.Property
 import org.polyfrost.oneconfig.api.ui.v1.ExperimentalOneConfigUiApi
 import org.polyfrost.oneconfig.api.ui.v1.OneConfigUI
@@ -134,8 +146,36 @@ private fun NotesScreen() {
     }
     val selected = NotesPage.selected?.let { uuid -> all.firstOrNull { it.uuid == uuid } }
 
+    val gridState = rememberLazyGridState()
+    val cardFocus = remember { FocusRequester() }
+    var restoring by remember { mutableStateOf<UUID?>(null) }
+
+    fun closeEditor() {
+        if (Controllers.isDispatching) restoring = NotesPage.selected
+        NotesPage.selected = null
+    }
+
+    LaunchedEffect(restoring) {
+        val uuid = restoring ?: return@LaunchedEffect
+        val index = shown.indexOfFirst { it.uuid == uuid }
+        if (index >= 0) {
+            if (gridState.layoutInfo.visibleItemsInfo.none { it.index == index }) gridState.scrollToItem(index)
+            runCatching { cardFocus.requestFocus() }
+        }
+        restoring = null
+    }
+
     val spacing = theme.spacing
-    Column(Modifier.fillMaxSize().padding(start = spacing.xxl, end = spacing.xxl, top = spacing.xl)) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(start = spacing.xxl, end = spacing.xxl, top = spacing.xl)
+            .onKeyEvent { event ->
+                if (event.key != Key.Escape || !event.isFromController || selected == null || BackStack.hasOpen) return@onKeyEvent false
+                if (event.type == KeyEventType.KeyDown) closeEditor()
+                true
+            },
+    ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(spacing.m)) {
             for (option in NoteFilter.entries) Chip(option.label, filter == option, { filter = option })
             Spacer(Modifier.weight(1f))
@@ -155,13 +195,15 @@ private fun NotesScreen() {
                         Modifier.fillMaxSize(),
                         icon = Noteable.ICON,
                     )
-                    else -> NoteGrid(shown, pinned, selected?.uuid) { NotesPage.selected = if (NotesPage.selected == it.uuid) null else it.uuid }
+                    else -> NoteGrid(shown, pinned, selected?.uuid, gridState, restoring, cardFocus) {
+                        NotesPage.selected = if (NotesPage.selected == it.uuid) null else it.uuid
+                    }
                 }
             },
             detail = {
                 // Always laid out, so opening a note never reflows the grid
                 if (selected != null) {
-                    EditorPane(selected, selected.uuid in pinned) { NotesPage.selected = null }
+                    EditorPane(selected, selected.uuid in pinned, ::closeEditor)
                 } else {
                     EditorPlaceholder(all.isNotEmpty())
                 }
@@ -172,14 +214,22 @@ private fun NotesScreen() {
 }
 
 @Composable
-private fun NoteGrid(notes: List<Note>, pinned: Set<UUID>, selected: UUID?, onSelect: (Note) -> Unit) {
-    CardGrid(notes, key = { it.uuid }, Modifier.fillMaxSize(), minCellWidth = CARD_MIN_WIDTH) { note ->
-        NoteCard(note, note.uuid in pinned, note.uuid == selected) { onSelect(note) }
+private fun NoteGrid(
+    notes: List<Note>,
+    pinned: Set<UUID>,
+    selected: UUID?,
+    state: LazyGridState,
+    focused: UUID?,
+    focus: FocusRequester,
+    onSelect: (Note) -> Unit,
+) {
+    CardGrid(notes, key = { it.uuid }, Modifier.fillMaxSize(), minCellWidth = CARD_MIN_WIDTH, state = state) { note ->
+        NoteCard(note, note.uuid in pinned, note.uuid == selected, if (note.uuid == focused) focus else null) { onSelect(note) }
     }
 }
 
 @Composable
-private fun NoteCard(note: Note, pinned: Boolean, selected: Boolean, onClick: () -> Unit) {
+private fun NoteCard(note: Note, pinned: Boolean, selected: Boolean, focus: FocusRequester?, onClick: () -> Unit) {
     val theme = OneConfigTheme.current
     val typography = OneConfigTheme.typography
     val deleteTitle = NoteText.DELETE_TITLE.resolve()
@@ -190,6 +240,7 @@ private fun NoteCard(note: Note, pinned: Boolean, selected: Boolean, onClick: ()
 
     Card(
         Modifier
+            .then(if (focus != null) Modifier.focusRequester(focus) else Modifier)
             .fillMaxWidth()
             .height(CARD_HEIGHT)
             .contextMenu { noteMenu(note, pinned, deleteTitle, deleteText, deleteConfirm) }
